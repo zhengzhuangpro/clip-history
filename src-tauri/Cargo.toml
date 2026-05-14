@@ -1,0 +1,26 @@
+[package]
+name = "clip-history"
+version = "0.1.0"
+description = "A lightweight cross-platform clipboard history manager"
+authors = ["you"]
+edition = "2021"
+
+[lib]
+name = "clip_history_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.33", features = ["bundled"] }
+r2d2 = "0.8"
+r2d2_sqlite = "0.26"
+arboard = "3"
+image = "0.25"
+sha2 = "0.10"
+chrono = { version = "0.4", features = ["serde"] }
