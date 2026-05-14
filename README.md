@@ -65,7 +65,7 @@ cargo install tauri-cli --version "^2"
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/clip-history.git
+git clone https://github.com/zhengzhuangpro/clip-history.git
 cd clip-history
 
 # 安装前端依赖
