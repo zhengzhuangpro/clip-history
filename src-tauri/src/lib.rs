@@ -75,6 +75,8 @@ pub fn run() {
             commands::history::get_clip_item,
             commands::config::get_config,
             commands::config::set_config,
+            commands::config::update_shortcut,
+            commands::config::clear_shortcuts,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
