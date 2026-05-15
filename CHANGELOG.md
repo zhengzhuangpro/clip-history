@@ -3,6 +3,18 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.5.0] - 2026-05-15
+
+### 新增
+- 系统托盘图标与右键菜单（显示/退出）
+- 全局快捷键 Alt+Shift+V 切换窗口显隐
+- 窗口失焦自动隐藏
+- 关闭按钮拦截为隐藏（最小化到托盘）
+- 开机自启动（tauri-plugin-autostart）
+- macOS 原生菜单栏（应用菜单 + 编辑菜单）
+- IPC 命令：get_config、set_config 读写应用配置
+- 托盘图标左键点击切换窗口
+
 ## [0.4.0] - 2026-05-15
 
 ### 新增
