@@ -62,8 +62,7 @@ clip-history/
 │   │   │   ├── listener.rs   # 剪贴板变化监听
 │   │   │   └── types.rs      # 剪贴板数据类型
 │   │   ├── db/               # 数据库层
-│   │   │   ├── mod.rs
-│   │   │   ├── init.rs       # 数据库初始化与迁移
+│   │   │   ├── mod.rs        # 连接池、迁移、CRUD 操作
 │   │   │   └── models.rs     # 数据模型
 │   │   ├── commands/         # Tauri IPC 命令
 │   │   │   ├── mod.rs
@@ -81,15 +80,16 @@ clip-history/
 │   │   ├── ui/               # shadcn/ui 基础组件
 │   │   ├── HistoryList.tsx   # 历史记录列表
 │   │   ├── HistoryItem.tsx   # 单条记录卡片
-│   │   ├── SearchBar.tsx     # 搜索栏
-│   │   ├── Preview.tsx       # 内容预览区
+│   │   ├── SearchBar.tsx     # 搜索栏 + 设置按钮入口
 │   │   ├── ImagePreview.tsx  # 图片预览
-│   │   └── Settings.tsx      # 设置面板
+│   │   ├── Settings.tsx      # 设置面板
+│   │   └── Toast.tsx         # Toast 提示
+│   ├── i18n/                 # 国际化
+│   │   ├── index.tsx         # I18nProvider + useTranslation hook
+│   │   └── locales/          # 翻译文件
+│   │       ├── zh.ts         # 中文
+│   │       └── en.ts         # 英文
 │   ├── hooks/                # 自定义 Hooks
-│   │   ├── useHistory.ts     # 历史记录数据
-│   │   ├── useSearch.ts      # 搜索逻辑
-│   │   ├── useShortcut.ts    # 快捷键处理
-│   │   └── useTheme.ts       # 主题切换
 │   ├── stores/               # Zustand 状态管理
 │   │   ├── historyStore.ts   # 历史记录状态
 │   │   └── settingsStore.ts  # 设置状态
@@ -104,12 +104,18 @@ clip-history/
 ```
 
 ### Git 规范
-- 分支策略：`main` 为主分支，功能开发使用 `feat/xxx` 分支
+- 分支策略：`master` 为主分支，功能开发使用 `feat/xxx` 分支
 - Commit 格式：`type: description`
   - `feat: add image clipboard support`
   - `fix: resolve fuzzy search crash`
   - `docs: update installation guide`
   - `refactor: optimize query performance`
+- 不在 commit message 中添加 AI 签名
+
+### 构建说明
+- 前端构建脚本为 `vite build`（不经过 tsc，避免 @types/react 版本兼容问题）
+- CI 仅构建 macOS + Windows，不构建 Linux
+- Release 构建 macOS ARM/Intel + Windows 三个目标
 
 ### 文档优先原则
 - 新功能开发前，先更新 `docs/` 下对应文档
@@ -135,6 +141,15 @@ clip-history/
 - **方案**：图片以 Blob 形式存入 SQLite，缩略图按需生成并缓存
 - **原因**：简化备份和迁移，避免文件系统路径管理
 
+### AD-005: 轻量级 i18n 方案
+- **方案**：React Context + useTranslation Hook，翻译文件按语言拆分
+- **原因**：项目字符串约 45 个，无需引入 i18next 等重型库
+- **存储**：语言偏好存入 SQLite app_config 表，通过 settingsStore 同步
+
+### AD-006: 托盘菜单动态构建
+- **方案**：TrayIcon 存入 Tauri managed state，每次剪贴板变化时重建菜单
+- **原因**：muda 的 Menu 构建后不可变，只能整体替换
+
 ---
 
 ## 已完成模块
@@ -146,6 +161,9 @@ clip-history/
 - v0.5.0 系统集成：系统托盘、全局快捷键、窗口自动隐藏、开机自启动、macOS 菜单栏
 - v0.6.0 设置与个性化：设置面板、主题切换、历史数量配置、数据清理
 - v0.7.0 体验打磨：虚拟滚动、置顶收藏、批量删除、键盘导航、操作反馈动画
+- v0.8.0 托盘历史菜单：右键托盘展示最近 10 条历史，点击复制，置顶项优先
+- v0.9.0 中英文切换：React Context + Hook 轻量 i18n，默认中文，支持跟随系统
+- v0.10.0 UI 优化：去掉顶部标题栏，设置按钮移至搜索栏右侧
 
 ---
 
