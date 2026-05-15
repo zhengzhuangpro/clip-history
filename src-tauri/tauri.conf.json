@@ -14,9 +14,9 @@
     "windows": [
       {
         "title": "Clip History",
-        "width": 800,
+        "width": 400,
         "height": 600,
-        "minWidth": 600,
+        "minWidth": 360,
         "minHeight": 400,
         "decorations": true,
         "resizable": true,

@@ -4,12 +4,12 @@
 
 **目标**：搭建完整的开发环境，跑通前后端通信。
 
-- [ ] Tauri 2 项目初始化（`npm create tauri-app`）
-- [ ] React + TypeScript + Vite 前端脚手架
-- [ ] Tailwind CSS + shadcn/ui 配置
-- [ ] SQLite 数据库初始化与基础 CRUD
-- [ ] Tauri IPC 命令基础封装
-- [ ] 基础窗口配置（尺寸、位置、无边框）
+- [x] Tauri 2 项目初始化（`npm create tauri-app`）
+- [x] React + TypeScript + Vite 前端脚手架
+- [x] Tailwind CSS + shadcn/ui 配置
+- [x] SQLite 数据库初始化与基础 CRUD
+- [x] Tauri IPC 命令基础封装
+- [x] 基础窗口配置（尺寸、位置、无边框）
 
 ## v0.2.0 — 剪贴板核心功能
 
