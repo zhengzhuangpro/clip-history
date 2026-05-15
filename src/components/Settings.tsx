@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { clearHistory, clearShortcuts, updateShortcut } from "@/lib/tauri";
 import type { AppSettings } from "@/types";
@@ -24,6 +32,7 @@ export function Settings({ onBack }: SettingsProps) {
   const { settings, isLoading, loadSettings, updateSetting } =
     useSettingsStore();
   const [clearing, setClearing] = useState(false);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -33,6 +42,7 @@ export function Settings({ onBack }: SettingsProps) {
     setClearing(true);
     try {
       await clearHistory();
+      setShowClearDialog(false);
     } finally {
       setClearing(false);
     }
@@ -136,13 +146,40 @@ export function Settings({ onBack }: SettingsProps) {
           <Button
             variant="destructive"
             size="sm"
-            onClick={handleClearHistory}
+            onClick={() => setShowClearDialog(true)}
             disabled={clearing}
           >
             <Trash2 className="size-4" />
             {clearing ? "清理中..." : "清除历史记录"}
           </Button>
         </div>
+
+        <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+          <DialogContent showCloseButton={false}>
+            <DialogHeader>
+              <DialogTitle>确认清除历史记录</DialogTitle>
+              <DialogDescription>
+                此操作将清除所有未置顶的历史记录，且不可撤销。确定要继续吗？
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowClearDialog(false)}
+                disabled={clearing}
+              >
+                取消
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleClearHistory}
+                disabled={clearing}
+              >
+                {clearing ? "清理中..." : "确认清除"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
