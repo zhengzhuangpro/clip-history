@@ -5,6 +5,7 @@ import type { ClipItem } from "@/types";
 
 interface HistoryItemProps {
   item: ClipItem;
+  query: string;
   isSelected: boolean;
   onSelect: () => void;
   onCopy: () => void;
@@ -12,8 +13,25 @@ interface HistoryItemProps {
   onDelete: () => void;
 }
 
+function highlightText(text: string, query: string) {
+  if (!query.trim()) return text;
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`(${escaped})`, "gi");
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    regex.test(part) ? (
+      <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+        {part}
+      </mark>
+    ) : (
+      part
+    ),
+  );
+}
+
 export function HistoryItem({
   item,
+  query,
   isSelected,
   onSelect,
   onCopy,
@@ -89,7 +107,9 @@ export function HistoryItem({
         />
       ) : (
         <p className="text-sm leading-snug whitespace-pre-wrap break-all line-clamp-3">
-          {item.textContent?.slice(0, 200) ?? ""}
+          {item.textContent
+            ? highlightText(item.textContent.slice(0, 200), query)
+            : ""}
         </p>
       )}
     </div>
