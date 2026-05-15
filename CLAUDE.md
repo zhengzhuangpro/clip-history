@@ -175,6 +175,45 @@ clip-history/
 
 ---
 
+## 发布流程
+
+### 版本号管理
+版本号需同步更新以下三个文件：
+- `package.json` → `"version"`
+- `src-tauri/tauri.conf.json` → `"version"`
+- `CHANGELOG.md` → 新增版本条目
+
+### 发布步骤
+```bash
+# 1. 更新版本号（package.json + tauri.conf.json + CHANGELOG.md）
+# 2. 提交版本更新
+git add -A && git commit -m "release: v0.1.x"
+git push origin master
+
+# 3. 删除旧 tag（如有）
+git push origin --delete v0.1.x
+git tag -d v0.1.x
+
+# 4. 创建新 tag 并推送
+git tag -a v0.1.x -m "v0.1.x: 版本说明"
+git push origin v0.1.x
+```
+
+### CI 自动化
+推送 `v*` tag 后，GitHub Actions 自动执行：
+1. 构建 macOS ARM / macOS Intel / Windows 三个平台
+2. 生成通用文件名安装包（`Clip.History_aarch64.dmg` 等）上传到 Release
+3. 生成 `latest.json` 更新清单供自动更新使用
+
+### 安装包产物
+| 文件 | 平台 |
+|------|------|
+| `Clip.History_aarch64.dmg` | macOS Apple Silicon |
+| `Clip.History_x64.dmg` | macOS Intel |
+| `Clip.History_x64-setup.exe` | Windows |
+
+---
+
 ## 开发环境要求
 
 - Node.js >= 18
