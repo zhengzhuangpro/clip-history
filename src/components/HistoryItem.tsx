@@ -1,6 +1,7 @@
 import { Pin, Trash2, Copy, Image, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { blobToDataUrl } from "@/lib/utils";
+import { splitByHighlight } from "@/lib/highlight";
 import type { ClipItem } from "@/types";
 
 interface HistoryItemProps {
@@ -20,17 +21,15 @@ interface HistoryItemProps {
 }
 
 function highlightText(text: string, query: string) {
-  if (!query.trim()) return text;
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(`(${escaped})`, "gi");
-  const parts = text.split(regex);
-  return parts.map((part, i) =>
-    regex.test(part) ? (
+  const segments = splitByHighlight(text, query);
+  if (segments.length === 1 && !segments[0].highlighted) return text;
+  return segments.map((seg, i) =>
+    seg.highlighted ? (
       <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
-        {part}
+        {seg.text}
       </mark>
     ) : (
-      part
+      seg.text
     ),
   );
 }

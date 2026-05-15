@@ -171,3 +171,59 @@ fn compute_hash(data: &[u8]) -> String {
     hasher.update(data);
     format!("{:x}", hasher.finalize())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn compute_hash_consistent() {
+        let hash1 = compute_hash(b"hello");
+        let hash2 = compute_hash(b"hello");
+        assert_eq!(hash1, hash2);
+    }
+
+    #[test]
+    fn compute_hash_known_vector() {
+        // SHA-256 of "hello"
+        let hash = compute_hash(b"hello");
+        assert_eq!(
+            hash,
+            "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        );
+    }
+
+    #[test]
+    fn compute_hash_empty() {
+        let hash = compute_hash(b"");
+        assert_eq!(
+            hash,
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        );
+    }
+
+    #[test]
+    fn compute_hash_different_inputs() {
+        let hash1 = compute_hash(b"hello");
+        let hash2 = compute_hash(b"world");
+        assert_ne!(hash1, hash2);
+    }
+
+    #[test]
+    fn encode_png_valid() {
+        let img = image::RgbaImage::from_pixel(2, 2, image::Rgba([255, 0, 0, 255]));
+        let png = encode_png(&img);
+        // PNG magic bytes
+        assert_eq!(&png[0..4], &[0x89, 0x50, 0x4E, 0x47]);
+    }
+
+    #[test]
+    fn encode_png_roundtrip() {
+        let img = image::RgbaImage::from_pixel(2, 2, image::Rgba([0, 255, 0, 255]));
+        let png = encode_png(&img);
+        let decoded = image::load_from_memory(&png).unwrap();
+        assert_eq!(decoded.width(), 2);
+        assert_eq!(decoded.height(), 2);
+    }
+}
+

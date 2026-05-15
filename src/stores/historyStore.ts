@@ -33,7 +33,7 @@ interface HistoryState {
   selectAll: () => void;
 }
 
-function applyFilter(items: ClipItem[], query: string, filter: FilterType): ClipItem[] {
+export function applyFilter(items: ClipItem[], query: string, filter: FilterType): ClipItem[] {
   let result = items;
 
   if (filter !== "all") {

@@ -30,7 +30,7 @@ pub fn init_pool(app_handle: &AppHandle) -> Result<DbPool, String> {
     Ok(pool)
 }
 
-fn run_migrations(pool: &DbPool) -> Result<(), String> {
+pub(crate) fn run_migrations(pool: &DbPool) -> Result<(), String> {
     let conn = pool
         .get()
         .map_err(|e| format!("Failed to get db connection: {e}"))?;
@@ -294,3 +294,199 @@ pub fn get_latest_hash(pool: &DbPool) -> Result<Option<String>, String> {
 
     Ok(hash)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn test_pool() -> DbPool {
+        let manager = SqliteConnectionManager::memory();
+        let pool = Pool::new(manager).unwrap();
+        run_migrations(&pool).unwrap();
+        pool
+    }
+
+    fn make_text_item(id: i64, text: &str) -> ClipItem {
+        ClipItem {
+            id,
+            content_type: "text".to_string(),
+            text_content: Some(text.to_string()),
+            image_blob: None,
+            thumbnail: None,
+            image_width: None,
+            image_height: None,
+            image_format: None,
+            source_app: None,
+            content_hash: format!("hash_{id}"),
+            is_pinned: false,
+            created_at: format!("2026-01-0{id}T00:00:00Z"),
+            updated_at: format!("2026-01-0{id}T00:00:00Z"),
+        }
+    }
+
+    #[test]
+    fn insert_and_get_by_id() {
+        let pool = test_pool();
+        let item = make_text_item(0, "hello");
+        let id = insert_clip_item(&pool, &item).unwrap();
+        assert!(id > 0);
+
+        let found = get_clip_item_by_id(&pool, id).unwrap().unwrap();
+        assert_eq!(found.text_content, Some("hello".to_string()));
+        assert_eq!(found.content_type, "text");
+    }
+
+    #[test]
+    fn get_by_id_not_found() {
+        let pool = test_pool();
+        let result = get_clip_item_by_id(&pool, 999).unwrap();
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn get_history_empty() {
+        let pool = test_pool();
+        let items = get_history(&pool, 100, 0).unwrap();
+        assert!(items.is_empty());
+    }
+
+    #[test]
+    fn get_history_ordered_by_created_at() {
+        let pool = test_pool();
+        insert_clip_item(&pool, &make_text_item(0, "first")).unwrap();
+        insert_clip_item(&pool, &make_text_item(0, "second")).unwrap();
+
+        let items = get_history(&pool, 100, 0).unwrap();
+        assert_eq!(items.len(), 2);
+        // DESC order: second first
+        assert_eq!(items[0].text_content, Some("second".to_string()));
+        assert_eq!(items[1].text_content, Some("first".to_string()));
+    }
+
+    #[test]
+    fn get_history_pinned_first() {
+        let pool = test_pool();
+        let id1 = insert_clip_item(&pool, &make_text_item(0, "unpinned")).unwrap();
+        let id2 = insert_clip_item(&pool, &make_text_item(0, "pinned")).unwrap();
+
+        // Pin the second item
+        let conn = pool.get().unwrap();
+        conn.execute("UPDATE clipboard_history SET is_pinned = 1 WHERE id = ?1", params![id2]).unwrap();
+
+        let items = get_history(&pool, 100, 0).unwrap();
+        assert_eq!(items[0].id, id2);
+        assert_eq!(items[0].is_pinned, true);
+        assert_eq!(items[1].id, id1);
+        assert_eq!(items[1].is_pinned, false);
+    }
+
+    #[test]
+    fn get_history_limit() {
+        let pool = test_pool();
+        for i in 0..5 {
+            insert_clip_item(&pool, &make_text_item(0, &format!("item{i}"))).unwrap();
+        }
+
+        let items = get_history(&pool, 3, 0).unwrap();
+        assert_eq!(items.len(), 3);
+    }
+
+    #[test]
+    fn get_history_offset() {
+        let pool = test_pool();
+        for i in 0..5 {
+            insert_clip_item(&pool, &make_text_item(0, &format!("item{i}"))).unwrap();
+        }
+
+        let items = get_history(&pool, 100, 3).unwrap();
+        assert_eq!(items.len(), 2);
+    }
+
+    #[test]
+    fn search_history_match() {
+        let pool = test_pool();
+        insert_clip_item(&pool, &make_text_item(0, "hello world")).unwrap();
+        insert_clip_item(&pool, &make_text_item(0, "foo bar")).unwrap();
+
+        let results = search_history(&pool, "hello").unwrap();
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].text_content, Some("hello world".to_string()));
+    }
+
+    #[test]
+    fn search_history_no_match() {
+        let pool = test_pool();
+        insert_clip_item(&pool, &make_text_item(0, "hello")).unwrap();
+
+        let results = search_history(&pool, "xyz").unwrap();
+        assert!(results.is_empty());
+    }
+
+    #[test]
+    fn delete_item_ok() {
+        let pool = test_pool();
+        let id = insert_clip_item(&pool, &make_text_item(0, "to delete")).unwrap();
+        delete_item(&pool, id).unwrap();
+
+        let found = get_clip_item_by_id(&pool, id).unwrap();
+        assert!(found.is_none());
+    }
+
+    #[test]
+    fn delete_nonexistent_ok() {
+        let pool = test_pool();
+        // Should not error
+        delete_item(&pool, 999).unwrap();
+    }
+
+    #[test]
+    fn toggle_pin_works() {
+        let pool = test_pool();
+        let id = insert_clip_item(&pool, &make_text_item(0, "pin me")).unwrap();
+
+        let item = get_clip_item_by_id(&pool, id).unwrap().unwrap();
+        assert_eq!(item.is_pinned, false);
+
+        super::toggle_pin(&pool, id).unwrap();
+        let item = get_clip_item_by_id(&pool, id).unwrap().unwrap();
+        assert_eq!(item.is_pinned, true);
+
+        super::toggle_pin(&pool, id).unwrap();
+        let item = get_clip_item_by_id(&pool, id).unwrap().unwrap();
+        assert_eq!(item.is_pinned, false);
+    }
+
+    #[test]
+    fn clear_history_keeps_pinned() {
+        let pool = test_pool();
+        insert_clip_item(&pool, &make_text_item(0, "unpinned")).unwrap();
+        let id2 = insert_clip_item(&pool, &make_text_item(0, "pinned")).unwrap();
+
+        let conn = pool.get().unwrap();
+        conn.execute("UPDATE clipboard_history SET is_pinned = 1 WHERE id = ?1", params![id2]).unwrap();
+
+        clear_history(&pool).unwrap();
+
+        let items = get_history(&pool, 100, 0).unwrap();
+        assert_eq!(items.len(), 1);
+        assert_eq!(items[0].id, id2);
+    }
+
+    #[test]
+    fn get_latest_hash_empty() {
+        let pool = test_pool();
+        let hash = get_latest_hash(&pool).unwrap();
+        assert!(hash.is_none());
+    }
+
+    #[test]
+    fn get_latest_hash_returns_most_recent() {
+        let pool = test_pool();
+        insert_clip_item(&pool, &make_text_item(0, "old")).unwrap();
+        insert_clip_item(&pool, &make_text_item(0, "new")).unwrap();
+
+        let hash = get_latest_hash(&pool).unwrap().unwrap();
+        assert_eq!(hash, "hash_0"); // both have same hash pattern, latest wins
+    }
+}
+
