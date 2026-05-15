@@ -3,6 +3,7 @@ import { Settings as SettingsIcon } from "lucide-react";
 import "@/styles/globals.css";
 import { HistoryList } from "@/components/HistoryList";
 import { Settings } from "@/components/Settings";
+import { ToastContainer } from "@/components/Toast";
 import { Button } from "@/components/ui/button";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useTheme } from "@/hooks/useTheme";
@@ -34,6 +35,7 @@ export default function App() {
       ) : (
         <Settings onBack={() => setView("history")} />
       )}
+      <ToastContainer />
     </div>
   );
 }

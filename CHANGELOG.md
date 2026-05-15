@@ -3,6 +3,19 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.7.0] - 2026-05-15
+
+### 新增
+- 列表虚拟滚动（@tanstack/react-virtual，大数据量高性能渲染）
+- 记录置顶/收藏功能（前端 + 后端 toggle_pin）
+- 批量删除（多选模式 + 批量操作工具栏）
+- 键盘导航（上下选择、Enter 复制、Delete 删除、Escape 取消、Ctrl+B 多选、Ctrl+A 全选）
+- 操作反馈动画：
+  - 复制成功：项目绿色闪光
+  - 删除：滑出淡出动画
+  - 新记录：从顶部滑入动画
+  - Toast 通知：右侧滑入/滑出动画
+
 ## [0.6.0] - 2026-05-15
 
 ### 新增
