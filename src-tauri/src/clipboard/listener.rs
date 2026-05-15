@@ -7,7 +7,7 @@ use std::thread;
 use std::time::Duration;
 use tauri::{AppHandle, Emitter};
 
-use crate::db::db::{get_latest_hash, insert_clip_item, DbPool};
+use crate::db::{get_latest_hash, insert_clip_item, DbPool};
 use crate::db::models::ClipItem;
 
 static SKIP_NEXT: AtomicBool = AtomicBool::new(false);
@@ -51,6 +51,9 @@ pub fn start_clipboard_listener(app: AppHandle, pool: DbPool) {
                     Ok(id) => {
                         println!("New clipboard item saved: id={id}");
                         let _ = app.emit("clipboard-new", id);
+                        if let Err(e) = crate::tray::rebuild_tray_menu(&app) {
+                            eprintln!("Failed to rebuild tray menu: {e}");
+                        }
                     }
                     Err(e) => {
                         eprintln!("Failed to insert clip item: {e}");

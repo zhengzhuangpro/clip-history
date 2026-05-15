@@ -23,6 +23,7 @@ describe("settingsStore", () => {
         pollIntervalMs: 200,
         shortcutShow: "Alt+Shift+V",
         theme: "system",
+        language: "zh",
         autoStart: true,
         deduplicate: true,
       },
@@ -109,6 +110,7 @@ describe("settingsStore", () => {
         ["pollIntervalMs", "poll_interval_ms"],
         ["shortcutShow", "shortcut_show"],
         ["theme", "theme"],
+        ["language", "language"],
         ["autoStart", "auto_start"],
         ["deduplicate", "deduplicate"],
       ];

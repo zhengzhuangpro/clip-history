@@ -1,7 +1,7 @@
 use tauri::{AppHandle, Manager};
 use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
 
-use crate::db::db::DbPool;
+use crate::db::DbPool;
 
 fn parse_shortcut(s: &str) -> Option<Shortcut> {
     let parts: Vec<&str> = s.split('+').map(|p| p.trim()).collect();

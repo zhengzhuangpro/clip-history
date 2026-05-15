@@ -8,7 +8,7 @@ mod tray;
 use tauri::Manager;
 use tauri_plugin_autostart::ManagerExt;
 
-use db::db::DbState;
+use db::DbState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -22,14 +22,18 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .setup(|app| {
-            let pool = db::db::init_pool(app.handle())?;
+            let pool = db::init_pool(app.handle())?;
             app.manage(DbState(std::sync::Mutex::new(pool.clone())));
 
             // macOS native menu bar
             tray::build_app_menu(app)?;
 
             // System tray icon and menu
-            tray::create_tray(app)?;
+            let tray = tray::create_tray(app)?;
+            app.manage(tray::TrayState(tray));
+
+            // Populate tray menu with existing history
+            tray::rebuild_tray_menu(app.handle())?;
 
             // Register global shortcut from DB config
             {
@@ -60,10 +64,10 @@ pub fn run() {
                 api.prevent_close();
                 let _ = window.hide();
             }
-            tauri::WindowEvent::Focused(focused) => {
-                if !focused && window.label() == "main" {
-                    let _ = window.hide();
-                }
+            tauri::WindowEvent::Focused(focused)
+                if !focused && window.label() == "main" =>
+            {
+                let _ = window.hide();
             }
             _ => {}
         })

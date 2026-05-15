@@ -18,11 +18,9 @@ Clip History 是一个基于 [Tauri 2](https://v2.tauri.app/) 构建的桌面应
 
 ## 截图
 
-> 开发中，敬请期待
-
 | 主界面 | 搜索 | 设置 |
 |--------|------|------|
-| *截图占位* | *截图占位* | *截图占位* |
+| ![主界面](website/public/screenshots/1.png) | ![搜索](website/public/screenshots/2.png) | ![设置](website/public/screenshots/3.png) |
 
 ## 安装
 
