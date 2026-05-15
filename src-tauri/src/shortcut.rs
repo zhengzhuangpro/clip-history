@@ -135,3 +135,106 @@ pub fn clear_shortcuts(app: &AppHandle) -> Result<(), String> {
         .unregister_all()
         .map_err(|e| format!("Failed to unregister shortcuts: {e}"))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_alt_shift_v() {
+        let s = parse_shortcut("Alt+Shift+V").unwrap();
+        assert!(s.mods.contains(Modifiers::ALT));
+        assert!(s.mods.contains(Modifiers::SHIFT));
+        assert_eq!(s.key, Code::KeyV);
+    }
+
+    #[test]
+    fn parse_ctrl_c() {
+        let s = parse_shortcut("Ctrl+C").unwrap();
+        assert!(s.mods.contains(Modifiers::CONTROL));
+        assert_eq!(s.key, Code::KeyC);
+    }
+
+    #[test]
+    fn parse_cmd_shift_a() {
+        let s = parse_shortcut("Cmd+Shift+A").unwrap();
+        assert!(s.mods.contains(Modifiers::SUPER));
+        assert!(s.mods.contains(Modifiers::SHIFT));
+        assert_eq!(s.key, Code::KeyA);
+    }
+
+    #[test]
+    fn parse_case_insensitive() {
+        let s1 = parse_shortcut("alt+shift+v").unwrap();
+        let s2 = parse_shortcut("ALT+SHIFT+V").unwrap();
+        assert_eq!(s1.key, s2.key);
+        assert_eq!(s1.mods, s2.mods);
+    }
+
+    #[test]
+    fn parse_option_alias() {
+        let s = parse_shortcut("Option+V").unwrap();
+        assert!(s.mods.contains(Modifiers::ALT));
+    }
+
+    #[test]
+    fn parse_control_alias() {
+        let s = parse_shortcut("Control+V").unwrap();
+        assert!(s.mods.contains(Modifiers::CONTROL));
+    }
+
+    #[test]
+    fn parse_command_alias() {
+        let s = parse_shortcut("Command+V").unwrap();
+        assert!(s.mods.contains(Modifiers::SUPER));
+    }
+
+    #[test]
+    fn parse_super_alias() {
+        let s = parse_shortcut("Super+V").unwrap();
+        assert!(s.mods.contains(Modifiers::SUPER));
+    }
+
+    #[test]
+    fn parse_meta_alias() {
+        let s = parse_shortcut("Meta+V").unwrap();
+        assert!(s.mods.contains(Modifiers::SUPER));
+    }
+
+    #[test]
+    fn parse_digit_keys() {
+        let s = parse_shortcut("Ctrl+0").unwrap();
+        assert_eq!(s.key, Code::Digit0);
+
+        let s = parse_shortcut("Ctrl+9").unwrap();
+        assert_eq!(s.key, Code::Digit9);
+    }
+
+    #[test]
+    fn parse_function_keys() {
+        let s = parse_shortcut("Ctrl+F1").unwrap();
+        assert_eq!(s.key, Code::F1);
+
+        let s = parse_shortcut("Ctrl+F12").unwrap();
+        assert_eq!(s.key, Code::F12);
+    }
+
+    #[test]
+    fn parse_space() {
+        let s = parse_shortcut("Ctrl+Space").unwrap();
+        assert_eq!(s.key, Code::Space);
+    }
+
+    #[test]
+    fn parse_invalid_key_returns_none() {
+        assert!(parse_shortcut("Alt+Qwerty").is_none());
+    }
+
+    #[test]
+    fn parse_single_modifier() {
+        let s = parse_shortcut("Ctrl+V").unwrap();
+        assert!(s.mods.contains(Modifiers::CONTROL));
+        assert_eq!(s.key, Code::KeyV);
+    }
+}
+
