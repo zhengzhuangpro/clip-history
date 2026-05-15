@@ -5,8 +5,10 @@ import { ArrowDown, Monitor, Laptop } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { siteConfig } from "@/config/site";
+import { useMacOSDownloadLink } from "@/hooks/useMacOSDownloadLink";
 
 export function Hero() {
+  const macOSHref = useMacOSDownloadLink();
   return (
     <section className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-20 text-center">
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,var(--primary)/10,transparent_50%)]" />
@@ -33,7 +35,7 @@ export function Hero() {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-16">
-        <Button size="lg" render={<a href={siteConfig.downloadLinks.macOS} />}>
+        <Button size="lg" render={<a href={macOSHref} />}>
           <Laptop className="h-5 w-5" />
           下载 macOS 版
         </Button>

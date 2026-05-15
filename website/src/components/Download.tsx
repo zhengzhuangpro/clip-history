@@ -4,8 +4,10 @@ import { Laptop, Monitor, Download, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
+import { useMacOSDownloadLink } from "@/hooks/useMacOSDownloadLink";
 
 export function DownloadSection() {
+  const macOSHref = useMacOSDownloadLink();
   return (
     <section className="py-20 px-4 bg-muted/30">
       <div className="max-w-4xl mx-auto">
@@ -27,7 +29,7 @@ export function DownloadSection() {
                 下载 .dmg 安装包，拖入 Applications 文件夹即可
               </p>
               <Button
-                render={<a href={siteConfig.downloadLinks.macOS} />}
+                render={<a href={macOSHref} />}
                 className="w-full"
               >
                 <Download className="h-4 w-4" />
@@ -45,7 +47,7 @@ export function DownloadSection() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
-                下载 .msi 安装包，双击运行安装向导
+                下载 .exe 安装包，双击运行安装向导
               </p>
               <Button
                 render={<a href={siteConfig.downloadLinks.windows} />}
