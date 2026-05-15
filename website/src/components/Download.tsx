@@ -73,11 +73,8 @@ export function DownloadSection() {
                     首次打开可能提示<strong>"已损坏"</strong>或<strong>"无法验证开发者"</strong>，这是 macOS 对未签名应用的安全限制。
                   </p>
                   <p>
-                    打开<strong>终端</strong>，执行以下命令后即可正常使用：
+                    打开<strong>终端</strong>，输入 <code className="bg-black/10 dark:bg-white/10 rounded px-1">xattr -cr </code>（注意后面有个空格），然后将应用程序图标拖入终端窗口，回车即可。
                   </p>
-                  <code className="block bg-black/10 dark:bg-white/10 rounded px-3 py-2 text-xs font-mono">
-                    xattr -cr /Applications/Clip\ History.app
-                  </code>
                 </div>
               </div>
             </div>
