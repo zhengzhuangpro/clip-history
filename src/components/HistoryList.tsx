@@ -84,7 +84,11 @@ export function HistoryList({ onSettingsClick }: { onSettingsClick: () => void }
   const virtualizer = useVirtualizer({
     count: filteredItems.length,
     getScrollElement: () => listRef.current,
-    estimateSize: () => ITEM_HEIGHT,
+    estimateSize: (index) => {
+      const item = filteredItems[index];
+      if (item?.contentType === "image") return 160;
+      return 72;
+    },
     overscan: 5,
   });
 
