@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { clearHistory, clearShortcuts, updateShortcut } from "@/lib/tauri";
+import { useTranslation } from "@/i18n";
 import type { AppSettings } from "@/types";
 
 interface SettingsProps {
@@ -29,6 +30,7 @@ interface SettingsProps {
 }
 
 export function Settings({ onBack }: SettingsProps) {
+  const { t } = useTranslation();
   const { settings, isLoading, loadSettings, updateSetting } =
     useSettingsStore();
   const [clearing, setClearing] = useState(false);
@@ -51,7 +53,7 @@ export function Settings({ onBack }: SettingsProps) {
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center text-muted-foreground text-sm">
-        加载中...
+        {t("loading")}
       </div>
     );
   }
@@ -62,12 +64,35 @@ export function Settings({ onBack }: SettingsProps) {
         <Button variant="ghost" size="sm" onClick={onBack}>
           <ArrowLeft className="size-4" />
         </Button>
-        <h2 className="text-sm font-semibold">设置</h2>
+        <h2 className="text-sm font-semibold">{t("settings")}</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-5">
+        {/* Language */}
+        <SettingRow label={t("language")}>
+          <Select
+            value={settings.language}
+            onValueChange={(v) => {
+              if (v) updateSetting("language", v as AppSettings["language"]);
+            }}
+          >
+            <SelectTrigger className="w-32">
+              <SelectValue>
+                {settings.language === "system" && t("language_system")}
+                {settings.language === "zh" && t("language_zh")}
+                {settings.language === "en" && t("language_en")}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="system">{t("language_system")}</SelectItem>
+              <SelectItem value="zh">{t("language_zh")}</SelectItem>
+              <SelectItem value="en">{t("language_en")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </SettingRow>
+
         {/* Theme */}
-        <SettingRow label="主题">
+        <SettingRow label={t("theme")}>
           <Select
             value={settings.theme}
             onValueChange={(v) => {
@@ -75,18 +100,22 @@ export function Settings({ onBack }: SettingsProps) {
             }}
           >
             <SelectTrigger className="w-32">
-              <SelectValue />
+              <SelectValue>
+                {settings.theme === "light" && t("theme_light")}
+                {settings.theme === "dark" && t("theme_dark")}
+                {settings.theme === "system" && t("theme_system")}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="light">浅色</SelectItem>
-              <SelectItem value="dark">深色</SelectItem>
-              <SelectItem value="system">跟随系统</SelectItem>
+              <SelectItem value="light">{t("theme_light")}</SelectItem>
+              <SelectItem value="dark">{t("theme_dark")}</SelectItem>
+              <SelectItem value="system">{t("theme_system")}</SelectItem>
             </SelectContent>
           </Select>
         </SettingRow>
 
         {/* Auto start */}
-        <SettingRow label="开机自启动">
+        <SettingRow label={t("auto_start")}>
           <Switch
             checked={settings.autoStart}
             onCheckedChange={(v: boolean) => updateSetting("autoStart", v)}
@@ -94,7 +123,7 @@ export function Settings({ onBack }: SettingsProps) {
         </SettingRow>
 
         {/* Deduplicate */}
-        <SettingRow label="内容去重">
+        <SettingRow label={t("deduplicate")}>
           <Switch
             checked={settings.deduplicate}
             onCheckedChange={(v: boolean) => updateSetting("deduplicate", v)}
@@ -102,7 +131,7 @@ export function Settings({ onBack }: SettingsProps) {
         </SettingRow>
 
         {/* Max history count */}
-        <SettingRow label="最大历史记录数">
+        <SettingRow label={t("max_history")}>
           <Input
             type="number"
             className="w-24 text-right"
@@ -119,7 +148,7 @@ export function Settings({ onBack }: SettingsProps) {
         </SettingRow>
 
         {/* Shortcut */}
-        <SettingRow label="全局快捷键">
+        <SettingRow label={t("shortcut")}>
           <ShortcutRecorder
             value={settings.shortcutShow}
             onChange={async (v) => {
@@ -139,9 +168,9 @@ export function Settings({ onBack }: SettingsProps) {
 
         {/* Data cleanup */}
         <div className="space-y-2">
-          <Label>数据清理</Label>
+          <Label>{t("data_cleanup")}</Label>
           <p className="text-xs text-muted-foreground">
-            清除所有未置顶的历史记录，此操作不可撤销。
+            {t("clear_warning")}
           </p>
           <Button
             variant="destructive"
@@ -150,16 +179,16 @@ export function Settings({ onBack }: SettingsProps) {
             disabled={clearing}
           >
             <Trash2 className="size-4" />
-            {clearing ? "清理中..." : "清除历史记录"}
+            {clearing ? t("clearing") : t("clear_history")}
           </Button>
         </div>
 
         <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
           <DialogContent showCloseButton={false}>
             <DialogHeader>
-              <DialogTitle>确认清除历史记录</DialogTitle>
+              <DialogTitle>{t("confirm_clear_title")}</DialogTitle>
               <DialogDescription>
-                此操作将清除所有未置顶的历史记录，且不可撤销。确定要继续吗？
+                {t("confirm_clear_desc")}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -168,14 +197,14 @@ export function Settings({ onBack }: SettingsProps) {
                 onClick={() => setShowClearDialog(false)}
                 disabled={clearing}
               >
-                取消
+                {t("cancel")}
               </Button>
               <Button
                 variant="destructive"
                 onClick={handleClearHistory}
                 disabled={clearing}
               >
-                {clearing ? "清理中..." : "确认清除"}
+                {clearing ? t("clearing") : t("confirm_clear")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -207,6 +236,7 @@ function ShortcutRecorder({
   value: string;
   onChange: (v: string) => void;
 }) {
+  const { t } = useTranslation();
   const [recording, setRecording] = useState(false);
   const [pending, setPending] = useState<string | null>(null);
   const [localValue, setLocalValue] = useState(value);
@@ -293,7 +323,7 @@ function ShortcutRecorder({
   }, [recording, cancelRecording]);
 
   const display = recording
-    ? pending || "按下快捷键..."
+    ? pending || t("press_shortcut")
     : localValue || value;
 
   return (
@@ -310,7 +340,7 @@ function ShortcutRecorder({
         {display}
       </button>
       {recording && (
-        <span className="text-xs text-muted-foreground">按 Esc 取消</span>
+        <span className="text-xs text-muted-foreground">{t("press_esc")}</span>
       )}
     </div>
   );
