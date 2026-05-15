@@ -64,15 +64,21 @@ export function DownloadSection() {
           <CardContent className="pt-6">
             <div className="flex gap-3">
               <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
-              <div>
+              <div className="space-y-3">
                 <p className="font-medium text-yellow-800 dark:text-yellow-200">
                   macOS 未签名应用说明
                 </p>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                  首次打开时 macOS 会提示"无法打开，因为无法验证开发者"。
-                  请前往 <strong>系统设置 → 隐私与安全性</strong>，
-                  在底部找到安全提示，点击"仍要打开"。
-                </p>
+                <div className="text-sm text-yellow-700 dark:text-yellow-300 space-y-2">
+                  <p>
+                    首次打开可能提示<strong>"已损坏"</strong>或<strong>"无法验证开发者"</strong>，这是 macOS 对未签名应用的安全限制。
+                  </p>
+                  <p>
+                    打开<strong>终端</strong>，执行以下命令后即可正常使用：
+                  </p>
+                  <code className="block bg-black/10 dark:bg-white/10 rounded px-3 py-2 text-xs font-mono">
+                    xattr -cr /Applications/Clip\ History.app
+                  </code>
+                </div>
               </div>
             </div>
           </CardContent>
