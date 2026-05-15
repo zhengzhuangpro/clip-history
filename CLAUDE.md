@@ -105,11 +105,11 @@ clip-history/
 
 ### Git 规范
 - 分支策略：`main` 为主分支，功能开发使用 `feat/xxx` 分支
-- Commit 格式：`type(scope): description`
-  - `feat(clipboard): add image clipboard support`
-  - `fix(search): resolve fuzzy search crash`
-  - `docs(readme): update installation guide`
-  - `refactor(db): optimize query performance`
+- Commit 格式：`type: description`
+  - `feat: add image clipboard support`
+  - `fix: resolve fuzzy search crash`
+  - `docs: update installation guide`
+  - `refactor: optimize query performance`
 
 ### 文档优先原则
 - 新功能开发前，先更新 `docs/` 下对应文档
@@ -140,6 +140,9 @@ clip-history/
 ## 已完成模块
 
 - v0.1.0 项目脚手架：Tauri 2 + React + TS + Vite + Tailwind CSS + SQLite + IPC 命令
+- v0.2.0 剪贴板核心功能：文本监听、去重、前端列表展示、事件通信
+- v0.3.0 图片支持：图片剪贴板读取、压缩缩略图、前端展示与预览
+- v0.4.0 搜索与过滤：搜索栏 UI、模糊搜索、类型过滤、防抖、关键词高亮
 
 ---
 
