@@ -1,35 +1,56 @@
 import { create } from "zustand";
 import type { ClipItem } from "@/types";
 import { getHistory, getClipItem } from "@/lib/tauri";
+import type { FilterType } from "@/components/SearchBar";
 
 interface HistoryState {
   items: ClipItem[];
+  filteredItems: ClipItem[];
   selectedItem: ClipItem | null;
   searchQuery: string;
+  filterType: FilterType;
   isLoading: boolean;
 
   loadItems: () => Promise<void>;
   appendItem: (id: number) => Promise<void>;
-  setItems: (items: ClipItem[]) => void;
-  setSelectedItem: (item: ClipItem | null) => void;
   setSearchQuery: (query: string) => void;
+  setFilterType: (filter: FilterType) => void;
+  setSelectedItem: (item: ClipItem | null) => void;
   setLoading: (loading: boolean) => void;
   removeItem: (id: number) => void;
 }
 
-export const useHistoryStore = create<HistoryState>((set) => ({
+function applyFilter(items: ClipItem[], query: string, filter: FilterType): ClipItem[] {
+  let result = items;
+
+  if (filter !== "all") {
+    result = result.filter((item) => item.contentType === filter);
+  }
+
+  if (query.trim()) {
+    const q = query.toLowerCase();
+    result = result.filter((item) =>
+      item.textContent?.toLowerCase().includes(q)
+    );
+  }
+
+  return result;
+}
+
+export const useHistoryStore = create<HistoryState>((set, get) => ({
   items: [],
+  filteredItems: [],
   selectedItem: null,
   searchQuery: "",
+  filterType: "all",
   isLoading: false,
 
   loadItems: async () => {
     set({ isLoading: true });
     try {
-      console.log("Loading history items...");
       const items = await getHistory();
-      console.log("Loaded items:", items.length);
-      set({ items });
+      const { searchQuery, filterType } = get();
+      set({ items, filteredItems: applyFilter(items, searchQuery, filterType) });
     } catch (e) {
       console.error("Failed to load history:", e);
     } finally {
@@ -39,27 +60,45 @@ export const useHistoryStore = create<HistoryState>((set) => ({
 
   appendItem: async (id: number) => {
     try {
-      console.log("Fetching clip item:", id);
       const item = await getClipItem(id);
-      console.log("Got clip item:", item);
       if (item) {
-        set((state) => ({
-          items: [item, ...state.items.filter((i) => i.id !== id)],
-        }));
+        set((state) => {
+          const items = [item, ...state.items.filter((i) => i.id !== id)];
+          return {
+            items,
+            filteredItems: applyFilter(items, state.searchQuery, state.filterType),
+          };
+        });
       }
     } catch (e) {
       console.error("Failed to fetch new clip item:", e);
     }
   },
 
-  setItems: (items) => set({ items }),
+  setSearchQuery: (searchQuery: string) => {
+    set((state) => ({
+      searchQuery,
+      filteredItems: applyFilter(state.items, searchQuery, state.filterType),
+    }));
+  },
+
+  setFilterType: (filterType: FilterType) => {
+    set((state) => ({
+      filterType,
+      filteredItems: applyFilter(state.items, state.searchQuery, filterType),
+    }));
+  },
+
   setSelectedItem: (selectedItem) => set({ selectedItem }),
-  setSearchQuery: (searchQuery) => set({ searchQuery }),
   setLoading: (isLoading) => set({ isLoading }),
   removeItem: (id) =>
-    set((state) => ({
-      items: state.items.filter((i) => i.id !== id),
-      selectedItem:
-        state.selectedItem?.id === id ? null : state.selectedItem,
-    })),
+    set((state) => {
+      const items = state.items.filter((i) => i.id !== id);
+      return {
+        items,
+        filteredItems: applyFilter(items, state.searchQuery, state.filterType),
+        selectedItem:
+          state.selectedItem?.id === id ? null : state.selectedItem,
+      };
+    }),
 }));
