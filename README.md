@@ -45,7 +45,7 @@ Clip History 是一个基于 [Tauri 2](https://v2.tauri.app/) 构建的桌面应
 
 ### Windows
 
-从 [Releases](../../releases) 下载 `.msi` 安装包运行安装。
+从 [Releases](../../releases) 下载 `.exe` 安装包运行安装。
 
 ## 快速上手
 
