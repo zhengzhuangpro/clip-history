@@ -109,3 +109,29 @@ pub fn register_shortcut(app: &AppHandle, pool: &DbPool) -> Result<(), String> {
 
     Ok(())
 }
+
+pub fn update_shortcut(app: &AppHandle, new_shortcut_str: &str) -> Result<(), String> {
+    let shortcut = parse_shortcut(new_shortcut_str)
+        .ok_or_else(|| format!("Invalid shortcut: {new_shortcut_str}"))?;
+
+    app.global_shortcut()
+        .unregister_all()
+        .map_err(|e| format!("Failed to unregister shortcuts: {e}"))?;
+
+    let app_handle = app.clone();
+    app.global_shortcut()
+        .on_shortcut(shortcut, move |_app, _shortcut, event| {
+            if event.state == ShortcutState::Pressed {
+                toggle_window(&app_handle);
+            }
+        })
+        .map_err(|e| format!("Failed to register shortcut: {e}"))?;
+
+    Ok(())
+}
+
+pub fn clear_shortcuts(app: &AppHandle) -> Result<(), String> {
+    app.global_shortcut()
+        .unregister_all()
+        .map_err(|e| format!("Failed to unregister shortcuts: {e}"))
+}

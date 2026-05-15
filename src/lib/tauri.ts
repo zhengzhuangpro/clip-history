@@ -39,3 +39,11 @@ export async function getConfig(): Promise<Record<string, string>> {
 export async function setConfig(key: string, value: string): Promise<void> {
   return invoke("set_config", { key, value });
 }
+
+export async function updateShortcut(shortcut: string): Promise<void> {
+  return invoke("update_shortcut", { shortcut });
+}
+
+export async function clearShortcuts(): Promise<void> {
+  return invoke("clear_shortcuts");
+}
