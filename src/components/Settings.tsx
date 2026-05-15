@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Trash2 } from "lucide-react";
+import { getVersion } from "@tauri-apps/api/app";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -35,6 +36,11 @@ export function Settings({ onBack }: SettingsProps) {
     useSettingsStore();
   const [clearing, setClearing] = useState(false);
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [version, setVersion] = useState("");
+
+  useEffect(() => {
+    getVersion().then(setVersion).catch(() => {});
+  }, []);
 
   useEffect(() => {
     loadSettings();
@@ -209,6 +215,12 @@ export function Settings({ onBack }: SettingsProps) {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {version && (
+          <p className="text-center text-xs text-muted-foreground pt-2">
+            Clip History v{version}
+          </p>
+        )}
       </div>
     </div>
   );
