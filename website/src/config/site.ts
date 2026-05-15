@@ -53,7 +53,8 @@ export const siteConfig = {
     { name: "SQLite", description: "本地数据存储" },
   ],
   downloadLinks: {
-    macOS: "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/Clip.History.dmg",
-    windows: "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/Clip.History.msi",
+    macOSArm: "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/Clip.History_aarch64.dmg",
+    macOSIntel: "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/Clip.History_x64.dmg",
+    windows: "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/Clip.History_x64-setup.exe",
   },
 } as const;

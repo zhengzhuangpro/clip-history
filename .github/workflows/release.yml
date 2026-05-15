@@ -16,10 +16,19 @@ jobs:
         include:
           - os: macos-latest
             target: aarch64-apple-darwin
+            bundle_dir: dmg
+            artifact_pattern: "*_aarch64.dmg"
+            generic_name: Clip.History_aarch64.dmg
           - os: macos-latest
             target: x86_64-apple-darwin
+            bundle_dir: dmg
+            artifact_pattern: "*_x64.dmg"
+            generic_name: Clip.History_x64.dmg
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            bundle_dir: nsis
+            artifact_pattern: "*_x64-setup.exe"
+            generic_name: Clip.History_x64-setup.exe
 
     runs-on: ${{ matrix.os }}
 
@@ -54,3 +63,12 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseName: ${{ github.ref_name }}
           args: --target ${{ matrix.target }}
+
+      - name: Upload generic-named artifact
+        shell: bash
+        run: |
+          src=$(find src-tauri/target/${{ matrix.target }}/release/bundle/${{ matrix.bundle_dir }} -name "${{ matrix.artifact_pattern }}" | head -1)
+          cp "$src" "${{ matrix.generic_name }}"
+          gh release upload "${{ github.ref_name }}" "${{ matrix.generic_name }}" --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
