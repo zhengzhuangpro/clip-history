@@ -3,6 +3,15 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.1.1] - 2026-05-15
+
+### 修复
+- 修复 Windows 运行时弹出终端窗口（设置 windows subsystem）
+- 修复虚拟滚动列表项重叠（按内容类型动态估算高度）
+- 更新 macOS 安装说明，补充"已损坏"提示解决方案
+- CI release 产物精简：去掉 MSI，上传通用文件名
+- 官方网站下载页自动检测 macOS 架构（ARM/Intel）
+
 ## [0.1.0] - 2026-05-15
 
 首个正式版本，包含完整的剪贴板管理核心功能。
