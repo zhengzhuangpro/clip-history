@@ -1,5 +1,6 @@
-mod db;
+mod clipboard;
 mod commands;
+mod db;
 
 use tauri::Manager;
 
@@ -11,7 +12,10 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
             let pool = db::db::init_pool(app.handle())?;
-            app.manage(DbState(std::sync::Mutex::new(pool)));
+            app.manage(DbState(std::sync::Mutex::new(pool.clone())));
+
+            clipboard::listener::start_clipboard_listener(app.handle().clone(), pool);
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -21,6 +25,7 @@ pub fn run() {
             commands::history::delete_history_item,
             commands::history::clear_history,
             commands::history::toggle_pin,
+            commands::history::get_clip_item,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
