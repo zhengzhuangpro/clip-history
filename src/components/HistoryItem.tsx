@@ -2,6 +2,7 @@ import { Pin, Trash2, Copy, Image, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { blobToDataUrl } from "@/lib/utils";
 import { splitByHighlight } from "@/lib/highlight";
+import { useTranslation } from "@/i18n";
 import type { ClipItem } from "@/types";
 
 interface HistoryItemProps {
@@ -49,6 +50,7 @@ export function HistoryItem({
   onDelete,
   onBatchToggle,
 }: HistoryItemProps) {
+  const { t, locale } = useTranslation();
   const isImage = item.contentType === "image";
 
   const animationStyle = isDeleting
@@ -86,7 +88,7 @@ export function HistoryItem({
           )}
           {isImage && <Image className="size-3 text-muted-foreground" />}
           <span className="text-xs text-muted-foreground">
-            {new Date(item.createdAt).toLocaleString("zh-CN", {
+            {new Date(item.createdAt).toLocaleString(locale === "zh" ? "zh-CN" : "en-US", {
               month: "2-digit",
               day: "2-digit",
               hour: "2-digit",
@@ -136,7 +138,7 @@ export function HistoryItem({
       {isImage && item.thumbnail ? (
         <img
           src={blobToDataUrl(item.thumbnail)}
-          alt="clipboard image"
+          alt={t("clipboard_image")}
           className="max-h-32 rounded border object-contain"
         />
       ) : (

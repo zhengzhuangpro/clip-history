@@ -23,6 +23,7 @@ export interface AppSettings {
   pollIntervalMs: number;
   shortcutShow: string;
   theme: "light" | "dark" | "system";
+  language: "zh" | "en" | "system";
   autoStart: boolean;
   deduplicate: boolean;
 }

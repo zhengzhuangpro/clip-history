@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use tauri::{AppHandle, State};
 
-use crate::db::db::DbState;
+use crate::db::DbState;
 
 #[tauri::command]
 pub fn get_config(state: State<'_, DbState>) -> Result<HashMap<String, String>, String> {

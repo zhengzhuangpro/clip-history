@@ -13,6 +13,7 @@ import {
 } from "@/lib/tauri";
 import { ListChecks, Trash2, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/i18n";
 
 const ITEM_HEIGHT = 80;
 
@@ -27,7 +28,8 @@ function useDebounce(fn: (query: string) => void, delay: number) {
   );
 }
 
-export function HistoryList() {
+export function HistoryList({ onSettingsClick }: { onSettingsClick: () => void }) {
+  const { t } = useTranslation();
   const {
     filteredItems,
     selectedItem,
@@ -130,10 +132,10 @@ export function HistoryList() {
       await copyToClipboard(id);
       setCopyFlashingId(id);
       setTimeout(() => setCopyFlashingId((prev) => (prev === id ? null : prev)), 400);
-      showToast("已复制到剪贴板");
+      showToast(t("copied"));
     } catch (e) {
       console.error("Failed to copy:", e);
-      showToast("复制失败", "error");
+      showToast(t("copy_failed"), "error");
     }
   };
 
@@ -148,7 +150,7 @@ export function HistoryList() {
         next.delete(id);
         return next;
       });
-      showToast("已删除");
+      showToast(t("deleted"));
     } catch (e) {
       console.error("Failed to delete:", e);
       setDeletingIds((prev) => {
@@ -156,7 +158,7 @@ export function HistoryList() {
         next.delete(id);
         return next;
       });
-      showToast("删除失败", "error");
+      showToast(t("delete_failed"), "error");
     }
   };
 
@@ -164,7 +166,7 @@ export function HistoryList() {
     try {
       await togglePin(id);
       await loadItems();
-      showToast("已更新置顶状态");
+      showToast(t("pin_updated"));
     } catch (e) {
       console.error("Failed to toggle pin:", e);
     }
@@ -194,7 +196,7 @@ export function HistoryList() {
         ids.forEach((id) => next.delete(id));
         return next;
       });
-      showToast(`已删除 ${ids.length} 条记录`);
+      showToast(t("deleted_count", { count: ids.length }));
     } catch (e) {
       console.error("Failed to batch delete:", e);
       setDeletingIds((prev) => {
@@ -202,7 +204,7 @@ export function HistoryList() {
         ids.forEach((id) => next.delete(id));
         return next;
       });
-      showToast("批量删除失败", "error");
+      showToast(t("batch_delete_failed"), "error");
     }
   };
 
@@ -287,7 +289,7 @@ export function HistoryList() {
   if (isLoading && filteredItems.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center text-muted-foreground">
-        <p className="text-sm">加载中...</p>
+        <p className="text-sm">{t("loading")}</p>
       </div>
     );
   }
@@ -299,19 +301,20 @@ export function HistoryList() {
         filter={filterType}
         onQueryChange={handleQueryChange}
         onFilterChange={setFilterType}
+        onSettingsClick={onSettingsClick}
       />
 
       {/* Toolbar */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b">
         <span className="text-xs text-muted-foreground">
-          {filteredItems.length} 条记录
-          {batchMode && selectedIds.size > 0 && ` · 已选 ${selectedIds.size} 条`}
+          {t("records", { count: filteredItems.length })}
+          {batchMode && selectedIds.size > 0 && t("selected", { count: selectedIds.size })}
         </span>
         <div className="flex items-center gap-1">
           {batchMode ? (
             <>
               <Button variant="ghost" size="xs" onClick={selectAll}>
-                全选
+                {t("select_all")}
               </Button>
               <Button
                 variant="ghost"
@@ -321,7 +324,7 @@ export function HistoryList() {
                 className="text-destructive hover:text-destructive"
               >
                 <Trash2 className="size-3 mr-1" />
-                删除
+                {t("delete")}
               </Button>
               <Button variant="ghost" size="icon-xs" onClick={clearBatchSelect}>
                 <X className="size-3" />
@@ -330,7 +333,7 @@ export function HistoryList() {
           ) : (
             <Button variant="ghost" size="xs" onClick={toggleBatchMode}>
               <ListChecks className="size-3 mr-1" />
-              多选
+              {t("multi_select")}
             </Button>
           )}
         </div>
@@ -340,8 +343,8 @@ export function HistoryList() {
         <div className="flex flex-1 items-center justify-center text-muted-foreground">
           <p className="text-sm">
             {searchQuery || filterType !== "all"
-              ? "没有匹配的记录"
-              : "暂无剪贴板记录"}
+              ? t("no_match")
+              : t("no_history")}
           </p>
         </div>
       ) : (
@@ -394,9 +397,9 @@ export function HistoryList() {
             {isLoading && filteredItems.length > 0 ? (
               <Loader2 className="size-4 animate-spin text-muted-foreground" />
             ) : hasMore ? (
-              <span className="text-xs text-muted-foreground/50">滚动加载更多</span>
+              <span className="text-xs text-muted-foreground/50">{t("scroll_more")}</span>
             ) : filteredItems.length > 0 ? (
-              <span className="text-xs text-muted-foreground/50">已加载全部</span>
+              <span className="text-xs text-muted-foreground/50">{t("all_loaded")}</span>
             ) : null}
           </div>
         </div>

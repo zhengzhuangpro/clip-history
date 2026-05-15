@@ -1,6 +1,6 @@
 use tauri::State;
 
-use crate::db::db::DbState;
+use crate::db::DbState;
 use crate::db::models::ClipItem;
 
 #[tauri::command]
@@ -10,7 +10,7 @@ pub fn get_history(
     offset: Option<i64>,
 ) -> Result<Vec<ClipItem>, String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::get_history(&pool, limit.unwrap_or(100), offset.unwrap_or(0))
+    crate::db::get_history(&pool, limit.unwrap_or(100), offset.unwrap_or(0))
 }
 
 #[tauri::command]
@@ -19,7 +19,7 @@ pub fn search_history(
     query: String,
 ) -> Result<Vec<ClipItem>, String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::search_history(&pool, &query)
+    crate::db::search_history(&pool, &query)
 }
 
 #[tauri::command]
@@ -93,7 +93,7 @@ pub fn delete_history_item(
     id: i64,
 ) -> Result<(), String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::delete_item(&pool, id)
+    crate::db::delete_item(&pool, id)
 }
 
 #[tauri::command]
@@ -101,7 +101,7 @@ pub fn clear_history(
     state: State<'_, DbState>,
 ) -> Result<(), String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::clear_history(&pool)
+    crate::db::clear_history(&pool)
 }
 
 #[tauri::command]
@@ -110,7 +110,7 @@ pub fn toggle_pin(
     id: i64,
 ) -> Result<(), String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::toggle_pin(&pool, id)
+    crate::db::toggle_pin(&pool, id)
 }
 
 #[tauri::command]
@@ -119,5 +119,5 @@ pub fn get_clip_item(
     id: i64,
 ) -> Result<Option<ClipItem>, String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
-    crate::db::db::get_clip_item_by_id(&pool, id)
+    crate::db::get_clip_item_by_id(&pool, id)
 }

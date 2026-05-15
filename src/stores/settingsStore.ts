@@ -9,6 +9,7 @@ const defaultSettings: AppSettings = {
   pollIntervalMs: 200,
   shortcutShow: "Alt+Shift+V",
   theme: "system",
+  language: "zh",
   autoStart: true,
   deduplicate: true,
 };
@@ -44,6 +45,9 @@ export const useSettingsStore = create<SettingsState>((set) => ({
           shortcutShow:
             config.shortcut_show || defaultSettings.shortcutShow,
           theme: (config.theme as AppSettings["theme"]) || defaultSettings.theme,
+          language:
+            (config.language as AppSettings["language"]) ||
+            defaultSettings.language,
           autoStart: config.auto_start !== "false",
           deduplicate: config.deduplicate !== "false",
         },
@@ -63,6 +67,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
       pollIntervalMs: "poll_interval_ms",
       shortcutShow: "shortcut_show",
       theme: "theme",
+      language: "language",
       autoStart: "auto_start",
       deduplicate: "deduplicate",
     };

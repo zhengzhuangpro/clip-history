@@ -1,6 +1,6 @@
 use rusqlite::params;
 
-use crate::db::db::DbPool;
+use crate::db::DbPool;
 
 pub fn get_config_value(pool: &DbPool, key: &str) -> Result<Option<String>, String> {
     let conn = pool
@@ -55,7 +55,7 @@ mod tests {
     fn test_pool() -> DbPool {
         let manager = SqliteConnectionManager::memory();
         let pool = Pool::new(manager).unwrap();
-        crate::db::db::run_migrations(&pool).unwrap();
+        crate::db::run_migrations(&pool).unwrap();
         pool
     }
 
@@ -87,8 +87,8 @@ mod tests {
     fn get_all_config_defaults() {
         let pool = test_pool();
         let all = get_all_config(&pool).unwrap();
-        // 8 seeded defaults
-        assert_eq!(all.len(), 8);
+        // 9 seeded defaults
+        assert_eq!(all.len(), 9);
         let keys: Vec<&str> = all.iter().map(|(k, _)| k.as_str()).collect();
         assert!(keys.contains(&"max_history_count"));
         assert!(keys.contains(&"shortcut_show"));
