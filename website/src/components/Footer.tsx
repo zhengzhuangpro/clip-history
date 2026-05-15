@@ -38,7 +38,14 @@ export function Footer() {
 
         <p className="text-center text-sm text-muted-foreground mt-8 flex items-center justify-center gap-1">
           Made with <Heart className="h-4 w-4 text-red-500 fill-red-500" /> by
-          zhengzhuang
+          <a
+            href="https://zhengz.cc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors underline underline-offset-4"
+          >
+            zhengzhuang
+          </a>
         </p>
       </div>
     </footer>
