@@ -1,5 +1,6 @@
-import { Pin, Trash2, Copy } from "lucide-react";
+import { Pin, Trash2, Copy, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { blobToDataUrl } from "@/lib/utils";
 import type { ClipItem } from "@/types";
 
 interface HistoryItemProps {
@@ -19,10 +20,7 @@ export function HistoryItem({
   onTogglePin,
   onDelete,
 }: HistoryItemProps) {
-  const preview =
-    item.contentType === "text"
-      ? item.textContent?.slice(0, 200) ?? ""
-      : "[图片]";
+  const isImage = item.contentType === "image";
 
   return (
     <div
@@ -35,14 +33,17 @@ export function HistoryItem({
       }`}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">
-          {new Date(item.createdAt).toLocaleString("zh-CN", {
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
+        <div className="flex items-center gap-1.5">
+          {isImage && <Image className="size-3 text-muted-foreground" />}
+          <span className="text-xs text-muted-foreground">
+            {new Date(item.createdAt).toLocaleString("zh-CN", {
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           {item.isPinned && (
             <Pin className="size-3 text-primary fill-primary" />
@@ -79,9 +80,18 @@ export function HistoryItem({
           </Button>
         </div>
       </div>
-      <p className="text-sm leading-snug whitespace-pre-wrap break-all line-clamp-3">
-        {preview}
-      </p>
+
+      {isImage && item.thumbnail ? (
+        <img
+          src={blobToDataUrl(item.thumbnail)}
+          alt="clipboard image"
+          className="max-h-32 rounded border object-contain"
+        />
+      ) : (
+        <p className="text-sm leading-snug whitespace-pre-wrap break-all line-clamp-3">
+          {item.textContent?.slice(0, 200) ?? ""}
+        </p>
+      )}
     </div>
   );
 }

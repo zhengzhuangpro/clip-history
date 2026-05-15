@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HistoryItem } from "@/components/HistoryItem";
+import { ImagePreview } from "@/components/ImagePreview";
 import { useHistoryStore } from "@/stores/historyStore";
 import {
   copyToClipboard,
@@ -20,6 +21,8 @@ export function HistoryList() {
     removeItem,
   } = useHistoryStore();
 
+  const [previewBlob, setPreviewBlob] = useState<Uint8Array | null>(null);
+
   useEffect(() => {
     loadItems();
 
@@ -27,7 +30,6 @@ export function HistoryList() {
 
     const setup = async () => {
       unlisten = await listen<number>("clipboard-new", (event) => {
-        console.log("Received clipboard-new event:", event.payload);
         appendItem(event.payload);
       });
     };
@@ -64,6 +66,13 @@ export function HistoryList() {
     }
   };
 
+  const handleSelect = (item: typeof items[0]) => {
+    setSelectedItem(item);
+    if (item.contentType === "image" && item.imageBlob) {
+      setPreviewBlob(item.imageBlob);
+    }
+  };
+
   if (isLoading && items.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center text-muted-foreground">
@@ -81,20 +90,28 @@ export function HistoryList() {
   }
 
   return (
-    <ScrollArea className="flex-1">
-      <div className="flex flex-col gap-0.5 p-2">
-        {items.map((item) => (
-          <HistoryItem
-            key={item.id}
-            item={item}
-            isSelected={selectedItem?.id === item.id}
-            onSelect={() => setSelectedItem(item)}
-            onCopy={() => handleCopy(item.id)}
-            onTogglePin={() => handleTogglePin(item.id)}
-            onDelete={() => handleDelete(item.id)}
-          />
-        ))}
-      </div>
-    </ScrollArea>
+    <>
+      <ScrollArea className="flex-1">
+        <div className="flex flex-col gap-0.5 p-2">
+          {items.map((item) => (
+            <HistoryItem
+              key={item.id}
+              item={item}
+              isSelected={selectedItem?.id === item.id}
+              onSelect={() => handleSelect(item)}
+              onCopy={() => handleCopy(item.id)}
+              onTogglePin={() => handleTogglePin(item.id)}
+              onDelete={() => handleDelete(item.id)}
+            />
+          ))}
+        </div>
+      </ScrollArea>
+
+      <ImagePreview
+        blob={previewBlob}
+        open={previewBlob !== null}
+        onClose={() => setPreviewBlob(null)}
+      />
+    </>
   );
 }
