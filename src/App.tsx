@@ -17,6 +17,7 @@ import { useSettingsStore } from "@/stores/settingsStore";
 import { useTheme } from "@/hooks/useTheme";
 import { useUpdater } from "@/hooks/useUpdater";
 import { useTranslation } from "@/i18n";
+import { hideWindow } from "@/lib/tauri";
 
 export default function App() {
   const [view, setView] = useState<"history" | "settings">("history");
@@ -33,6 +34,18 @@ export default function App() {
   }, [locale]);
 
   useTheme();
+
+  // Cmd+W (macOS) / Ctrl+W (Windows) to hide window
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "w") {
+        e.preventDefault();
+        hideWindow();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <div className="flex h-screen flex-col bg-background text-foreground">

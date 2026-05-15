@@ -1,5 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import type { ClipItem } from "@/types";
+
+export function hideWindow() {
+  getCurrentWindow().hide();
+}
 
 export async function getHistory(
   limit: number = 100,
