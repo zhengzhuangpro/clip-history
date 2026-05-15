@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
 
 export function useMacOSDownloadLink() {
-  const [href, setHref] = useState(siteConfig.downloadLinks.macOSArm);
+  const [href, setHref] = useState<string>(siteConfig.downloadLinks.macOSArm);
 
   useEffect(() => {
     const ua = navigator.userAgent;
