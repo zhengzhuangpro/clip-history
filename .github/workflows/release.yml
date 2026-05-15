@@ -17,16 +17,19 @@ jobs:
           - os: macos-latest
             target: aarch64-apple-darwin
             bundle_dir: dmg
+            bundles: dmg
             artifact_pattern: "*_aarch64.dmg"
             generic_name: Clip.History_aarch64.dmg
           - os: macos-latest
             target: x86_64-apple-darwin
             bundle_dir: dmg
+            bundles: dmg
             artifact_pattern: "*_x64.dmg"
             generic_name: Clip.History_x64.dmg
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             bundle_dir: nsis
+            bundles: nsis
             artifact_pattern: "*_x64-setup.exe"
             generic_name: Clip.History_x64-setup.exe
 
@@ -62,7 +65,9 @@ jobs:
         with:
           tagName: ${{ github.ref_name }}
           releaseName: ${{ github.ref_name }}
-          args: --target ${{ matrix.target }}
+          includeRelease: false
+          includeUpdaterJson: false
+          args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
 
       - name: Upload generic-named artifact
         shell: bash
