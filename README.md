@@ -30,6 +30,21 @@ Clip History 是一个基于 [Tauri 2](https://v2.tauri.app/) 构建的桌面应
 
 从 [Releases](../../releases) 下载 `.dmg` 安装包，拖入 Applications 文件夹即可。
 
+> **未签名应用说明**：本应用未进行 Apple 开发者签名，首次打开时 macOS 会提示"无法打开，因为无法验证开发者"。
+>
+> 解决方法：
+> 1. 将应用拖入 Applications 文件夹
+> 2. 打开 **系统设置 → 隐私与安全性**
+> 3. 在底部找到安全提示，点击 **仍要打开**
+> 4. 在弹窗中确认 **打开**
+>
+> 或者使用终端命令：
+> ```bash
+> xattr -cr /Applications/Clip\ History.app
+> ```
+>
+> 之后即可正常打开使用。
+
 ### Windows
 
 从 [Releases](../../releases) 下载 `.msi` 安装包运行安装。
