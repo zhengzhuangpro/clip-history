@@ -1,5 +1,6 @@
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
+use rusqlite::OptionalExtension;
 use rusqlite::params;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
@@ -240,6 +241,42 @@ pub fn clear_history(pool: &DbPool) -> Result<(), String> {
         .map_err(|e| format!("Failed to clear history: {e}"))?;
 
     Ok(())
+}
+
+pub fn get_clip_item_by_id(pool: &DbPool, id: i64) -> Result<Option<ClipItem>, String> {
+    let conn = pool
+        .get()
+        .map_err(|e| format!("Failed to get db connection: {e}"))?;
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT id, content_type, text_content, image_blob, thumbnail, image_width, image_height, image_format, source_app, content_hash, is_pinned, created_at, updated_at
+             FROM clipboard_history WHERE id = ?1",
+        )
+        .map_err(|e| format!("Failed to prepare query: {e}"))?;
+
+    let item = stmt
+        .query_row(rusqlite::params![id], |row| {
+            Ok(ClipItem {
+                id: row.get(0)?,
+                content_type: row.get(1)?,
+                text_content: row.get(2)?,
+                image_blob: row.get(3)?,
+                thumbnail: row.get(4)?,
+                image_width: row.get(5)?,
+                image_height: row.get(6)?,
+                image_format: row.get(7)?,
+                source_app: row.get(8)?,
+                content_hash: row.get(9)?,
+                is_pinned: row.get::<_, i32>(10)? != 0,
+                created_at: row.get(11)?,
+                updated_at: row.get(12)?,
+            })
+        })
+        .optional()
+        .map_err(|e| format!("Failed to query item: {e}"))?;
+
+    Ok(item)
 }
 
 pub fn get_latest_hash(pool: &DbPool) -> Result<Option<String>, String> {

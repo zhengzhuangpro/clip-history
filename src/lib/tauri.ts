@@ -27,3 +27,7 @@ export async function clearHistory(): Promise<void> {
 export async function togglePin(id: number): Promise<void> {
   return invoke("toggle_pin", { id });
 }
+
+export async function getClipItem(id: number): Promise<ClipItem | null> {
+  return invoke("get_clip_item", { id });
+}

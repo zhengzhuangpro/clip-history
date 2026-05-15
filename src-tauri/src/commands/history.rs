@@ -58,6 +58,9 @@ pub fn copy_to_clipboard(
     let mut clipboard = arboard::Clipboard::new()
         .map_err(|e| format!("Failed to access clipboard: {e}"))?;
 
+    // Tell the listener to skip detecting this programmatic change
+    crate::clipboard::listener::skip_next_clipboard_change();
+
     match item.content_type.as_str() {
         "text" => {
             let text = item.text_content.ok_or("No text content")?;
@@ -108,4 +111,13 @@ pub fn toggle_pin(
 ) -> Result<(), String> {
     let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
     crate::db::db::toggle_pin(&pool, id)
+}
+
+#[tauri::command]
+pub fn get_clip_item(
+    state: State<'_, DbState>,
+    id: i64,
+) -> Result<Option<ClipItem>, String> {
+    let pool = state.0.lock().map_err(|e| format!("Lock error: {e}"))?;
+    crate::db::db::get_clip_item_by_id(&pool, id)
 }
