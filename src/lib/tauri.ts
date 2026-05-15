@@ -31,3 +31,11 @@ export async function togglePin(id: number): Promise<void> {
 export async function getClipItem(id: number): Promise<ClipItem | null> {
   return invoke("get_clip_item", { id });
 }
+
+export async function getConfig(): Promise<Record<string, string>> {
+  return invoke("get_config");
+}
+
+export async function setConfig(key: string, value: string): Promise<void> {
+  return invoke("set_config", { key, value });
+}
