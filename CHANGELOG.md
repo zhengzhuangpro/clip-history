@@ -36,4 +36,10 @@
 - SQLite (rusqlite) + Zustand
 - 支持 macOS (ARM/Intel) + Windows
 
+## [0.1.2] - 2026-05-16
+
+### 修复
+- 修复 Windows 顶部显示英文应用菜单（About、Hide、Edit）
+- NSIS 安装界面添加中文支持
+
 ## [Unreleased]

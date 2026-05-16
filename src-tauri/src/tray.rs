@@ -228,31 +228,36 @@ fn truncate_text(text: &str, max_len: usize) -> String {
 }
 
 pub fn build_app_menu(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
-    let app_menu = SubmenuBuilder::new(app, "Clip History")
-        .item(&PredefinedMenuItem::about(app, None, None)?)
-        .separator()
-        .item(&PredefinedMenuItem::hide(app, None)?)
-        .item(&PredefinedMenuItem::hide_others(app, None)?)
-        .item(&PredefinedMenuItem::show_all(app, None)?)
-        .separator()
-        .item(&PredefinedMenuItem::quit(app, None)?)
-        .build()?;
+    // 只在 macOS 上显示应用菜单，Windows 上禁用
+    #[cfg(target_os = "macos")]
+    {
+        let app_menu = SubmenuBuilder::new(app, "Clip History")
+            .item(&PredefinedMenuItem::about(app, None, None)?)
+            .separator()
+            .item(&PredefinedMenuItem::hide(app, None)?)
+            .item(&PredefinedMenuItem::hide_others(app, None)?)
+            .item(&PredefinedMenuItem::show_all(app, None)?)
+            .separator()
+            .item(&PredefinedMenuItem::quit(app, None)?)
+            .build()?;
 
-    let edit_menu = SubmenuBuilder::new(app, "Edit")
-        .item(&PredefinedMenuItem::undo(app, None)?)
-        .item(&PredefinedMenuItem::redo(app, None)?)
-        .separator()
-        .item(&PredefinedMenuItem::cut(app, None)?)
-        .item(&PredefinedMenuItem::copy(app, None)?)
-        .item(&PredefinedMenuItem::paste(app, None)?)
-        .item(&PredefinedMenuItem::select_all(app, None)?)
-        .build()?;
+        let edit_menu = SubmenuBuilder::new(app, "Edit")
+            .item(&PredefinedMenuItem::undo(app, None)?)
+            .item(&PredefinedMenuItem::redo(app, None)?)
+            .separator()
+            .item(&PredefinedMenuItem::cut(app, None)?)
+            .item(&PredefinedMenuItem::copy(app, None)?)
+            .item(&PredefinedMenuItem::paste(app, None)?)
+            .item(&PredefinedMenuItem::select_all(app, None)?)
+            .build()?;
 
-    let menu = MenuBuilder::new(app)
-        .item(&app_menu)
-        .item(&edit_menu)
-        .build()?;
+        let menu = MenuBuilder::new(app)
+            .item(&app_menu)
+            .item(&edit_menu)
+            .build()?;
 
-    app.set_menu(menu)?;
+        app.set_menu(menu)?;
+    }
+
     Ok(())
 }
