@@ -52,7 +52,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "9zEtpUDgdCNhB1/K2yBysixgWFnBbJSAaVctaiXnE0s=",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERBFjhDQUE5MDIyRjgwNDYKUldSR2dDOENxYy80MnREREtsQVU4eExnU09SMkxOSjcrTy9pRGRpekIrSTVRM2x4Ykh1M0NiZngK",
       "endpoints": [
         "https://github.com/zhengzhuangpro/clip-history/releases/latest/download/latest.json"
       ]
