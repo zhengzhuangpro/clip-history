@@ -7,6 +7,10 @@ dist-ssr/
 
 # Tauri build output
 src-tauri/target/
+src-tauri/gen/
+
+# Cargo
+.cargo/
 
 # Environment
 .env
