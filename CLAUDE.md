@@ -122,6 +122,12 @@ clip-history/
 - 重大决策记录在 CLAUDE.md
 - 版本完成必须更新 CHANGELOG.md
 
+### 发版检查清单
+- 同步更新 `package.json` 和 `src-tauri/tauri.conf.json` 中的版本号
+- 更新 `CHANGELOG.md` 添加新版本记录
+- 运行 `pnpm tauri build` 本地测试打包
+- 提交后推送 tag：`git tag v0.1.x && git push origin v0.1.x`
+
 ---
 
 ## 架构决策
