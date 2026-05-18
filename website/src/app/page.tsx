@@ -1,8 +1,9 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
+import { Why } from "@/components/Why";
 import { Features } from "@/components/Features";
-import { Screenshots } from "@/components/Screenshots";
 import { TechStack } from "@/components/TechStack";
+import { Screenshots } from "@/components/Screenshots";
 import { Privacy } from "@/components/Privacy";
 import { DownloadSection } from "@/components/Download";
 import { Footer } from "@/components/Footer";
@@ -13,9 +14,10 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <Why />
         <Features />
-        <Screenshots />
         <TechStack />
+        <Screenshots />
         <Privacy />
         <DownloadSection />
       </main>

@@ -1,99 +1,46 @@
 "use client";
 
-import {
-  ClipboardList,
-  FileText,
-  Search,
-  Eye,
-  Copy,
-  Keyboard,
-  Inbox,
-  Feather,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
 
-const iconStyles: Record<
-  string,
-  { icon: React.ComponentType<{ className?: string }>; bg: string; color: string }
-> = {
-  "clipboard-list": {
-    icon: ClipboardList,
-    bg: "bg-blue-100 dark:bg-blue-900/30",
-    color: "text-blue-600 dark:text-blue-400",
-  },
-  "file-text": {
-    icon: FileText,
-    bg: "bg-purple-100 dark:bg-purple-900/30",
-    color: "text-purple-600 dark:text-purple-400",
-  },
-  search: {
-    icon: Search,
-    bg: "bg-amber-100 dark:bg-amber-900/30",
-    color: "text-amber-600 dark:text-amber-400",
-  },
-  eye: {
-    icon: Eye,
-    bg: "bg-emerald-100 dark:bg-emerald-900/30",
-    color: "text-emerald-600 dark:text-emerald-400",
-  },
-  copy: {
-    icon: Copy,
-    bg: "bg-rose-100 dark:bg-rose-900/30",
-    color: "text-rose-600 dark:text-rose-400",
-  },
-  keyboard: {
-    icon: Keyboard,
-    bg: "bg-cyan-100 dark:bg-cyan-900/30",
-    color: "text-cyan-600 dark:text-cyan-400",
-  },
-  tray: {
-    icon: Inbox,
-    bg: "bg-orange-100 dark:bg-orange-900/30",
-    color: "text-orange-600 dark:text-orange-400",
-  },
-  feather: {
-    icon: Feather,
-    bg: "bg-teal-100 dark:bg-teal-900/30",
-    color: "text-teal-600 dark:text-teal-400",
-  },
-};
-
 export function Features() {
+  const { pillars } = siteConfig;
   return (
-    <section className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-4">核心功能</h2>
-        <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-          为高效工作而生，每一个功能都经过精心设计
+    <section className="border-b hair relative overflow-hidden">
+      <div className="absolute inset-0 grid-bg opacity-50 grid-fade pointer-events-none" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <p className="text-[12px] font-mono uppercase tracking-[0.18em] text-ink-400">
+          <span className="sec-tag">[ 02 ] Pillars</span>
         </p>
+        <h2 className="mt-3 text-[34px] sm:text-[44px] leading-[1.05] tracking-[-0.025em] font-semibold text-balance text-foreground">
+          三个核心能力。
+        </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {siteConfig.features.map((feature) => {
-            const style = iconStyles[feature.icon];
-            const Icon = style?.icon;
-            return (
-              <Card key={feature.title} className="border-muted/50">
-                <CardHeader>
-                  <div
-                    className={`h-10 w-10 rounded-lg flex items-center justify-center mb-2 ${style?.bg ?? "bg-primary/10"}`}
-                  >
-                    {Icon && (
-                      <Icon
-                        className={`h-5 w-5 ${style?.color ?? "text-primary"}`}
-                      />
-                    )}
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="mt-14 grid md:grid-cols-3 gap-px bg-border rounded-xl overflow-hidden border hair">
+          {pillars.map((pillar) => (
+            <article key={pillar.number} className="card-bg p-6 sm:p-7">
+              <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.16em] text-ink-400">
+                <span className="text-blue">[{pillar.number}]</span>
+                <span className="dot" />
+                {pillar.tag}
+              </div>
+              <h3 className="mt-3 text-[18px] font-semibold tracking-tight text-foreground">
+                {pillar.title}
+              </h3>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-ink-300">
+                {pillar.description}
+              </p>
+              <ul className="mt-5 space-y-1.5 text-[12.5px] font-mono text-ink-300">
+                {pillar.points.map((point, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-blue mt-0.5 shrink-0">
+                      {point.slice(0, 1)}
+                    </span>
+                    <span>{point.slice(2)}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </div>
     </section>

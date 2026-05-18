@@ -1,85 +1,77 @@
 "use client";
 
-import { Laptop, Monitor, Download, AlertCircle } from "lucide-react";
+import { Apple, Monitor, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
 import { useMacOSDownloadLink } from "@/hooks/useMacOSDownloadLink";
 
 export function DownloadSection() {
   const macOSHref = useMacOSDownloadLink();
   return (
-    <section className="py-20 px-4 bg-muted/30">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-4">立即下载</h2>
-        <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-          支持 Windows 10+ 和 macOS 12+，免费使用
-        </p>
+    <section id="install" className="border-b hair relative overflow-hidden">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 py-20 sm:py-28">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-[12px] font-mono uppercase tracking-[0.18em] text-ink-400">
+            <span className="sec-tag">[ 06 ] Install</span>
+          </p>
+          <h2 className="mt-2 text-[34px] sm:text-[44px] leading-[1.05] tracking-[-0.025em] font-semibold text-balance text-foreground">
+            两步安装，立即使用。
+          </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Laptop className="h-5 w-5" />
-                macOS
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                下载 .dmg 安装包，拖入 Applications 文件夹即可
-              </p>
-              <Button
-                render={<a href={macOSHref} />}
-                className="w-full"
-              >
-                <Download className="h-4 w-4" />
-                下载 macOS 版
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Monitor className="h-5 w-5" />
-                Windows
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                下载 .exe 安装包，双击运行安装向导
-              </p>
-              <Button
-                render={<a href={siteConfig.downloadLinks.windows} />}
-                className="w-full"
-              >
-                <Download className="h-4 w-4" />
-                下载 Windows 版
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="border-yellow-500/50 bg-yellow-500/5">
-          <CardContent className="pt-6">
-            <div className="flex gap-3">
-              <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
-              <div className="space-y-3">
-                <p className="font-medium text-yellow-800 dark:text-yellow-200">
-                  macOS 未签名应用说明
-                </p>
-                <div className="text-sm text-yellow-700 dark:text-yellow-300 space-y-2">
-                  <p>
-                    首次打开可能提示<strong>"已损坏"</strong>或<strong>"无法验证开发者"</strong>，这是 macOS 对未签名应用的安全限制。
+          <div className="mt-9 rounded-xl border hair-strong code-bg term-shadow overflow-hidden text-left">
+            <div className="flex items-center gap-2 px-3.5 h-9 border-b hair text-[11.5px] font-mono text-ink-400">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+              <span className="ml-2">~/download</span>
+            </div>
+            <div className="px-5 sm:px-6 py-5 sm:py-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 font-mono text-[13px] text-ink-200">
+                    <Apple className="h-4 w-4 text-ink-400" />
+                    macOS
+                  </div>
+                  <p className="text-[12px] text-ink-400">
+                    .dmg 安装包，拖入 Applications
                   </p>
-                  <p>
-                    打开<strong>终端</strong>，输入 <code className="bg-black/10 dark:bg-white/10 rounded px-1">xattr -cr </code>（注意后面有个空格），然后将应用程序图标拖入终端窗口，回车即可。
+                  <Button
+                    render={<a href={macOSHref} />}
+                    nativeButton={false}                    className="w-full bg-blue text-white hover:bg-blue-soft"
+                    size="sm"
+                  >
+                    下载 macOS 版
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 font-mono text-[13px] text-ink-200">
+                    <Monitor className="h-4 w-4 text-ink-400" />
+                    Windows
+                  </div>
+                  <p className="text-[12px] text-ink-400">
+                    .exe 安装包，双击运行
                   </p>
+                  <Button
+                    render={<a href={siteConfig.downloadLinks.windows} />}
+                    nativeButton={false}                    className="w-full"
+                    variant="outline"
+                    size="sm"
+                  >
+                    下载 Windows 版
+                  </Button>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          <p className="mt-5 text-[14.5px] text-ink-300">
+            支持 Windows 10+ 和 macOS 12+，免费使用
+          </p>
+          <p className="mt-2 text-[12.5px] font-mono text-ink-400">
+            macOS 未签名应用首次打开需执行{" "}
+            <code>xattr -cr /Applications/Clip\ History.app</code>
+          </p>
+        </div>
       </div>
     </section>
   );

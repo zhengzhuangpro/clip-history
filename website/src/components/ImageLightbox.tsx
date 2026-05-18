@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useCallback } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 
@@ -21,26 +21,24 @@ export function ImageLightbox({
   className = "",
   priority = false,
 }: ImageLightboxProps) {
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
-  useEffect(() => {
-    if (open) {
-      requestAnimationFrame(() => setVisible(true));
-    }
-  }, [open]);
+  const handleOpen = useCallback(() => {
+    dialogRef.current?.showModal();
+    document.body.style.overflow = "hidden";
+  }, []);
 
-  const handleClose = () => {
-    setVisible(false);
-    setTimeout(() => setOpen(false), 200);
-  };
+  const handleClose = useCallback(() => {
+    dialogRef.current?.close();
+    document.body.style.overflow = "";
+  }, []);
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
-        className="cursor-zoom-in transition-transform hover:scale-[1.02]"
+        onClick={handleOpen}
+        className="cursor-zoom-in"
       >
         <Image
           src={src}
@@ -52,31 +50,28 @@ export function ImageLightbox({
         />
       </button>
 
-      {open && (
-        <div
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm transition-all duration-200 ${
-            visible ? "opacity-100" : "opacity-0"
-          }`}
+      <dialog
+        ref={dialogRef}
+        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm p-0 m-0 max-w-none max-h-none w-full h-full border-0 outline-none"
+        onClose={() => { document.body.style.overflow = ""; }}
+        onClick={handleClose}
+      >
+        <button
+          type="button"
           onClick={handleClose}
+          className="absolute top-4 right-4 text-white/80 hover:text-white z-10 cursor-pointer"
+          aria-label="Close"
         >
-          <button
-            type="button"
-            onClick={handleClose}
-            className="absolute top-4 right-4 text-white/80 hover:text-white transition-transform hover:scale-110"
-          >
-            <X className="h-8 w-8" />
-          </button>
-          <Image
-            src={src}
-            alt={alt}
-            width={width}
-            height={height}
-            className={`max-w-[90vw] max-h-[90vh] object-contain transition-all duration-200 ${
-              visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
-            }`}
-          />
-        </div>
-      )}
+          <X className="h-8 w-8" />
+        </button>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[90vw] max-h-[90vh] object-contain"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </dialog>
     </>
   );
 }
