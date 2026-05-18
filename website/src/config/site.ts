@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "Clip History",
   description: "轻量、美观、跨平台的剪贴板历史管理工具",
-  tagline: "你的每一次复制，都值得被记住",
+  tagline: "你的剪贴板，该有个好记性。",
   url: "https://cliphistory.dev",
   github: "https://github.com/zhengzhuangpro/clip-history",
   features: [
