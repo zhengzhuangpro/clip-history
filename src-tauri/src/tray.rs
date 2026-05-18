@@ -98,7 +98,7 @@ pub fn rebuild_tray_menu(app: &tauri::AppHandle) -> Result<(), Box<dyn std::erro
             if en { "[Image]" } else { "[图片]" }.to_string()
         } else {
             let text = item.text_content.as_deref().unwrap_or("");
-            truncate_text(text, 50)
+            truncate_text(text, 20)
         };
 
         let label = if item.is_pinned {
