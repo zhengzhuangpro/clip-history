@@ -4,7 +4,7 @@
 
 ## 设计风格
 
-- **暗色优先**：`<html className="dark" defaultTheme="dark" enableSystem />`
+- **双主题**：`defaultTheme="light"` 默认白色，支持明暗切换
 - **开发者/终端美学**：monospace 字体、终端窗口、编号段落标记、网格背景
 - **蓝色主题色**：`#3b82f6`（blue）、`#60a5fa`（blue-soft）
 - **所有元素主题感知**：通过 CSS 自定义属性 + `:root` / `.dark` 双重定义
