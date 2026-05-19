@@ -3,6 +3,23 @@
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## [0.1.4] - 2026-05-17
+
+### 修复
+- 禁用 WebView 默认右键菜单（打印、刷新、Reload 等）
+- 托盘菜单历史记录文本截断长度限制，避免菜单过宽
+
+## [0.1.3] - 2026-05-16
+
+### 新增
+- 启用自动更新功能（签名验证）
+
+## [0.1.2] - 2026-05-16
+
+### 修复
+- 修复 Windows 顶部显示英文应用菜单（About、Hide、Edit）
+- NSIS 安装界面添加中文支持
+
 ## [0.1.1] - 2026-05-15
 
 ### 修复
@@ -35,22 +52,3 @@
 - Tailwind CSS + shadcn/ui
 - SQLite (rusqlite) + Zustand
 - 支持 macOS (ARM/Intel) + Windows
-
-## [0.1.2] - 2026-05-16
-
-### 修复
-- 修复 Windows 顶部显示英文应用菜单（About、Hide、Edit）
-- NSIS 安装界面添加中文支持
-
-## [0.1.4] - 2026-05-17
-
-### 修复
-- 禁用 WebView 默认右键菜单（打印、刷新、Reload 等）
-- 托盘菜单历史记录文本截断长度限制，避免菜单过宽
-
-## [0.1.3] - 2026-05-16
-
-### 新增
-- 启用自动更新功能（签名验证）
-
-## [Unreleased]

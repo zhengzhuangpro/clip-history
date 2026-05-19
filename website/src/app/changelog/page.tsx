@@ -25,6 +25,19 @@ function getBadgeInfo(
   return { label: "修复", className: "bg-secondary text-secondary-foreground" };
 }
 
+function renderMarkdownText(text: string) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-semibold text-ink-100">
+        {part}
+      </strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 export default function ChangelogPage() {
   const entries = getChangelog();
 
@@ -96,7 +109,7 @@ export default function ChangelogPage() {
                                 className="text-[14px] leading-relaxed text-ink-200 font-mono"
                               >
                                 <span className="text-ink-500 mr-2">-</span>
-                                {item}
+                                {renderMarkdownText(item)}
                               </li>
                             ))}
                           </ul>
