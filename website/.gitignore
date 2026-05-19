@@ -43,3 +43,6 @@ next-env.d.ts
 
 # copied from repo root
 CHANGELOG.md
+
+# generated
+/src/generated/

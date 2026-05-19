@@ -3,7 +3,7 @@ import { ExternalLink } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
-import { getChangelog } from "@/lib/changelog";
+import entries from "@/generated/changelog.json";
 
 export const metadata: Metadata = {
   title: "版本历史",
@@ -39,7 +39,6 @@ function renderMarkdownText(text: string) {
 }
 
 export default function ChangelogPage() {
-  const entries = getChangelog();
 
   return (
     <>

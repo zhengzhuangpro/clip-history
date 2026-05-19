@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "cp ../CHANGELOG.md ./CHANGELOG.md",
+    "prebuild": "cp ../CHANGELOG.md ./CHANGELOG.md && node scripts/generate-changelog.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prebuild:cloudflare": "cp ../CHANGELOG.md ./CHANGELOG.md",
+    "prebuild:cloudflare": "cp ../CHANGELOG.md ./CHANGELOG.md && node scripts/generate-changelog.mjs",
     "build:cloudflare": "opennextjs-cloudflare build",
     "preview:cloudflare": "opennextjs-cloudflare build && wrangler dev",
     "deploy:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
