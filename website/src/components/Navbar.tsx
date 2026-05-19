@@ -24,6 +24,12 @@ export function Navbar() {
         </a>
 
         <div className="ml-auto flex items-center gap-2">
+          <a
+            href="/changelog"
+            className="text-[13px] text-ink-300 hover:text-blue transition-colors"
+          >
+            版本历史
+          </a>
           <ThemeToggle />
           <Button
             variant="ghost"
