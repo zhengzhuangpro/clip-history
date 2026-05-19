@@ -13,7 +13,7 @@ export interface ChangelogEntry {
 }
 
 export function getChangelog(): ChangelogEntry[] {
-  const filePath = path.resolve(process.cwd(), "../../CHANGELOG.md");
+  const filePath = path.resolve(process.cwd(), "../CHANGELOG.md");
   const raw = fs.readFileSync(filePath, "utf-8");
 
   // Split into version blocks by "## [version] - date"
