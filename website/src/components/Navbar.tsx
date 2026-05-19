@@ -21,14 +21,13 @@ export function Navbar() {
           </span>
         </a>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-5">
           <a
             href="/changelog"
             className="text-[13px] text-ink-300 hover:text-blue transition-colors"
           >
             版本历史
           </a>
-          <ThemeToggle />
           <a
             href={siteConfig.github}
             target="_blank"
@@ -37,8 +36,9 @@ export function Navbar() {
           >
             GitHub
           </a>
+          <ThemeToggle />
           <a
-            href="#install"
+            href="/#install"
             className="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue text-white hover:bg-blue-soft text-[13px] font-medium"
           >
             下载

@@ -29,7 +29,7 @@ function renderMarkdownText(text: string) {
   const parts = text.split(/\*\*(.+?)\*\*/g);
   return parts.map((part, i) =>
     i % 2 === 1 ? (
-      <strong key={i} className="font-semibold text-ink-100">
+      <strong key={i} className="font-semibold text-foreground">
         {part}
       </strong>
     ) : (
