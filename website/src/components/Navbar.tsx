@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { siteConfig } from "@/config/site";
 
@@ -31,28 +29,20 @@ export function Navbar() {
             版本历史
           </a>
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            nativeButton={false}
-            render={
-              <a
-                href={siteConfig.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            }
-            aria-label="GitHub"
-            className="h-8 w-8 border hair hover:bg-muted"
+          <a
+            href={siteConfig.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[13px] text-ink-300 hover:text-blue transition-colors"
           >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
+            GitHub
+          </a>
           <a
             href="#install"
             className="hidden sm:inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue text-white hover:bg-blue-soft text-[13px] font-medium"
           >
             下载
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </a>
         </div>
       </nav>
